@@ -3,21 +3,6 @@
 const loadEnv = require('./env');
 loadEnv();
 
-/**
- * Titanium Backend (improved)
- *
- * Compatível com as rotas existentes do seu server.js original.
- *
- * Principais melhorias:
- * - JWT_SECRET/PORT via env (com fallback)
- * - Token por Authorization: Bearer + compatibilidade com x-access-token
- * - Validação/sanitização básica de entradas
- * - Rate limit simples (sem dependências extras)
- * - Middleware de manutenção aplicado corretamente (antes das rotas protegidas)
- * - Routerização (API / rotas protegidas / admin)
- * - Melhor tratamento de erros e respostas consistentes
- */
-
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -36,9 +21,6 @@ const app = express();
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const PORT = Number(process.env.PORT || 3000);
 
-// IMPORTANTE: defina JWT_SECRET no .env / ambiente.
-// Fallback mantém compatibilidade com tokens antigos (se existirem),
-// mas NÃO é recomendado em produção.
 const JWT_SECRET = process.env.JWT_SECRET || 'titanium_secret_key_elite_performance';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 
@@ -859,3 +841,4 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
+
