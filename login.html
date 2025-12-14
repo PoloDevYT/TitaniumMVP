@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanium PRO | Acesso Restrito</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Oswald:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="logo_styles.css">
+    <link rel="stylesheet" href="toast.css">
+</head>
+
+<body class="auth-body">
+
+    <div class="auth-container">
+        <!-- Visual Side (Left) -->
+        <div class="auth-visual">
+            <div class="auth-overlay"></div>
+            <div class="auth-content">
+                <a href="/" class="auth-logo">
+                    <img src="assets/images/logo.png" alt="Titanium PRO Logo">
+                </a>
+                <div class="quote-box">
+                    <p>"A única coisa que fica entre você e seu objetivo é a história de merda que você continua
+                        contando a si mesmo."</p>
+                    <span class="quote-author">- PROTOCOLO T-PRO</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Side (Right) -->
+        <div class="auth-form-wrapper">
+            <div class="form-container" id="login-form">
+                <div class="auth-header">
+                    <h2>IDENTIFIQUE-SE</h2>
+                    <p>Acesse o painel de controle da sua evolução.</p>
+                </div>
+
+                <form action="#" class="std-form">
+                    <div class="input-group">
+                        <i data-lucide="user" class="input-icon"></i>
+                        <input type="email" placeholder="ID de Membro ou Email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <i data-lucide="lock" class="input-icon"></i>
+                        <input type="password" placeholder="Chave de Acesso" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <label class="checkbox-container">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                            Manter conectado
+                        </label>
+                        <a href="#" class="forgot-pass">Esqueceu a chave?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary full-width glow-btn">INICIAR SESSÃO</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Ainda não é um membro? <a href="#" id="show-register">Solicitar Acesso</a></p>
+                </div>
+            </div>
+
+            <!-- Register Form (Hidden by default) -->
+            <div class="form-container hidden" id="register-form">
+                <div class="auth-header">
+                    <h2>SOLICITAR ACESSO</h2>
+                    <p>Junte-se à elite da performance.</p>
+                </div>
+
+                <form action="#" class="std-form">
+                    <div class="input-group">
+                        <i data-lucide="user" class="input-icon"></i>
+                        <input type="text" placeholder="Nome Completo" required>
+                    </div>
+
+                    <div class="input-group">
+                        <i data-lucide="mail" class="input-icon"></i>
+                        <input type="email" placeholder="Email Corporativo/Pessoal" required>
+                    </div>
+
+                    <div class="input-group">
+                        <i data-lucide="lock" class="input-icon"></i>
+                        <input type="password" placeholder="Criar Senha" required>
+                    </div>
+
+                    <div class="input-group">
+                        <i data-lucide="smartphone" class="input-icon"></i>
+                        <input type="tel" placeholder="WhatsApp" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary full-width glow-btn">ENVIAR APLICAÇÃO</button>
+                </form>
+
+                <div class="auth-footer">
+                    <p>Já possui credenciais? <a href="#" id="show-login">Fazer Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

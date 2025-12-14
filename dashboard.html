@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Titanium PRO Elite</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Inter:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="workouts.css">
+    <link rel="stylesheet" href="toast.css">
+</head>
+
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-state">
+        <div class="loader-spinner"></div>
+        <p style="color: #666; font-family: var(--font-body); font-size: 0.9rem;">Sincronizando dados...</p>
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="sidebar-logo">
+                    <i data-lucide="dumbbell" class="logo-icon"></i>
+                    <span class="logo-text">TITANIUM</span>
+                </div>
+
+                <nav class="nav-menu">
+                    <a href="#" class="nav-item active">
+                        <i data-lucide="layout-dashboard"></i>
+                        <span>Visão Geral</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i data-lucide="activity"></i>
+                        <span>Meus Treinos</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i data-lucide="trending-up"></i>
+                        <span>Evolução</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i data-lucide="users"></i>
+                        <span>Comunidade Elite</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="user-mini">
+                    <div class="mini-avatar">
+                        <i data-lucide="user"></i>
+                    </div>
+                    <div class="mini-info">
+                        <h4 id="user-plan-badge">VISITANTE</h4>
+                        <span>Sessão Ativa</span>
+                    </div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <a href="#" id="logout-btn" class="nav-item" style="color: #666; padding: 10px 0;">
+                        <i data-lucide="log-out"></i>
+                        <span>Encerrar Sessão</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="dashboard-main">
+            <!-- HEADER -->
+            <div class="db-header">
+                <div class="welcome-text">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 5px;">OLÁ, <span id="user-name"
+                            class="highlight">ATLETA</span></h1>
+                    <p style="color: var(--text-secondary);">Resumo da sua performance biológica.</p>
+                </div>
+                <div class="date-widget">
+                    <h3 id="current-time">00:00</h3>
+                    <span id="current-date">Hoje</span>
+                </div>
+            </div>
+
+            <!-- STATS ROW -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span>Sequência Atual</span>
+                        <h2 id="stat-streak">0</h2>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="flame"></i></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span>Carga Total (Kg)</span>
+                        <h2 id="stat-load">0</h2>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="dumbbell"></i></div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <span>Check-ins Mês</span>
+                        <h2 id="stat-checkins">0</h2>
+                    </div>
+                    <div class="stat-icon"><i data-lucide="map-pin"></i></div>
+                </div>
+            </div>
+
+            <!-- CONTENT SECTIONS -->
+            <div class="dashboard-sections">
+                <!-- ACTIVITY FEED -->
+                <div class="activity-feed">
+                    <div class="feed-header">
+                        <div class="feed-title">
+                            <h3>Atividade Recente</h3>
+                        </div>
+                        <i data-lucide="more-horizontal" style="color:#666;"></i>
+                    </div>
+
+                    <div id="feed-list">
+                        <!-- Items injected by JS usually, hardcoded for skeleton -->
+                        <div class="feed-item">
+                            <div class="feed-icon"><i data-lucide="check-circle"></i></div>
+                            <div class="feed-info">
+                                <h4>Sistema Inicializado</h4>
+                                <p>Bem-vindo à plataforma Titanium OS.</p>
+                            </div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-icon"><i data-lucide="calendar"></i></div>
+                            <div class="feed-info">
+                                <h4>Plano de Treino</h4>
+                                <p>Sincronização de treinos pendente.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN WIDGETS -->
+                <div class="side-widgets">
+                    <!-- PLAN CARD -->
+                    <div class="black-card-widget">
+                        <div id="status-indicator" class="status-badge status-free" style="margin-bottom: 20px;">Conta
+                            Gratuita</div>
+
+                        <div id="free-dashboard">
+                            <i data-lucide="lock" class="black-card-icon"></i>
+                            <h3>DESBLOQUEIE O BLACK</h3>
+                            <p>Acesso exclusivo a treinos avançados e métricas de elite.</p>
+                            <button id="upgrade-btn" class="btn btn-primary full-width">VIRAR BLACK</button>
+                        </div>
+
+                        <div id="premium-dashboard" class="hidden">
+                            <i data-lucide="crown" class="black-card-icon" style="color: var(--accent-color);"></i>
+                            <h3>ACESSO TOTAL</h3>
+                            <p>Você é um membro da elite Titanium Black.</p>
+                            <button class="btn btn-outline full-width">Gerenciar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WORKOUTS SECTION -->
+            <div id="workouts-view" class="dashboard-custom-view hidden">
+                <div class="db-header" style="margin-bottom: 25px;">
+                    <div>
+                        <h2 style="color: #fff; margin-bottom: 5px;">MEUS TREINOS</h2>
+                        <p style="color: var(--text-secondary);">Monte e gerencie seus protocolos de treino.</p>
+                    </div>
+                    <button id="open-builder-btn" class="btn btn-primary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="plus" style="width:18px; height:18px;"></i> CRIAR TREINO
+                    </button>
+                </div>
+
+                <!-- My Workouts List -->
+                <div id="my-workouts-list"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                </div>
+
+                <!-- Empty State -->
+                <div id="no-workouts-msg" class="hidden"
+                    style="text-align: center; padding: 60px; background: #0f0f0f; border-radius: 12px; border: 1px dashed #333;">
+                    <i data-lucide="clipboard-list"
+                        style="width: 48px; height: 48px; color: #444; margin-bottom: 15px;"></i>
+                    <h3 style="color: #666;">Nenhum treino criado ainda</h3>
+                    <p style="color: #555; margin-top: 5px;">Clique em "Criar Treino" para começar.</p>
+                </div>
+            </div>
+
+            <!-- EVOLUTION VIEW -->
+            <div id="evolution-view" class="dashboard-custom-view hidden">
+                <div class="db-header" style="margin-bottom: 25px;">
+                    <div>
+                        <h2 style="color: #fff;">EVOLUÇÃO</h2>
+                        <p style="color: var(--text-secondary);">Acompanhe seu progresso físico.</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 300px; gap: 25px;">
+                    <!-- Chart -->
+                    <div style="background: #111; border: 1px solid #333; border-radius: 12px; padding: 25px;">
+                        <canvas id="progress-chart" height="200"></canvas>
+                    </div>
+
+                    <!-- Add Entry Form -->
+                    <div style="background: #111; border: 1px solid #333; border-radius: 12px; padding: 25px;">
+                        <h3 style="color: #fff; margin-bottom: 20px;">Novo Registro</h3>
+                        <div style="margin-bottom: 15px;">
+                            <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 5px;">Peso
+                                (kg)</label>
+                            <input type="number" id="progress-weight" step="0.1" placeholder="Ex: 75.5"
+                                style="width: 100%; padding: 10px; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; color: #fff;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 5px;">%
+                                Gordura</label>
+                            <input type="number" id="progress-fat" step="0.1" placeholder="Ex: 15.0"
+                                style="width: 100%; padding: 10px; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; color: #fff;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label
+                                style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 5px;">Notas</label>
+                            <input type="text" id="progress-notes" placeholder="Ex: Após jejum"
+                                style="width: 100%; padding: 10px; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; color: #fff;">
+                        </div>
+                        <button id="save-progress-btn" class="btn btn-primary full-width"
+                            style="padding: 12px;">SALVAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMMUNITY VIEW -->
+            <div id="community-view" class="dashboard-custom-view hidden">
+                <div class="db-header" style="margin-bottom: 25px;">
+                    <div>
+                        <h2 style="color: #fff;">COMUNIDADE ELITE</h2>
+                        <p style="color: var(--text-secondary);">Conecte-se com outros atletas.</p>
+                    </div>
+                </div>
+
+                <!-- Post Input -->
+                <div
+                    style="background: #111; border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <textarea id="community-input" placeholder="Compartilhe sua conquista ou dica..."
+                        style="width: 100%; min-height: 80px; padding: 15px; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; color: #fff; resize: none;"></textarea>
+                    <button id="post-community-btn" class="btn btn-primary"
+                        style="margin-top: 10px; padding: 10px 25px;">PUBLICAR</button>
+                </div>
+
+                <!-- Feed -->
+                <div id="community-feed" style="display: flex; flex-direction: column; gap: 15px;"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODALS (Outside layout for proper centering) -->
+
+    <!-- WORKOUT BUILDER MODAL -->
+    <!-- WORKOUT BUILDER MODAL -->
+    <div id="workout-builder-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Criar Novo Treino</h2>
+                <button id="close-builder" class="close-modal-btn">&times;</button>
+            </div>
+
+            <div class="modal-form-group">
+                <label class="modal-label">Nome do Treino</label>
+                <input type="text" id="workout-name" class="modal-input" placeholder="Ex: Treino A - Peito e Tríceps">
+            </div>
+
+            <div class="modal-form-group">
+                <label class="modal-label">Adicionar Exercício</label>
+                <div class="exercise-builder-grid">
+                    <input type="text" id="exercise-input" class="modal-input" placeholder="Nome">
+                    <input type="number" id="exercise-sets" class="modal-input" placeholder="Séries" min="1"
+                        style="text-align: center;">
+                    <input type="number" id="exercise-reps" class="modal-input" placeholder="Reps" min="1"
+                        style="text-align: center;">
+                    <input type="number" id="exercise-weight" class="modal-input" placeholder="Kg" min="0" step="0.5"
+                        style="text-align: center;">
+                    <button id="add-exercise-btn" class="exercise-add-btn">
+                        <i data-lucide="plus" style="width: 18px; height: 18px;"></i>
+                    </button>
+                </div>
+                <div class="exercise-builder-header">
+                    <span>Nome</span><span>Séries</span><span>Reps</span><span>Peso</span><span></span>
+                </div>
+            </div>
+
+            <div id="exercises-list" class="exercises-list-container"></div>
+
+            <button id="save-workout-btn" class="btn btn-primary full-width" style="padding: 14px;">SALVAR
+                TREINO</button>
+        </div>
+    </div>
+
+    <!-- PROFILE MODAL -->
+    <div id="profile-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h2>Meu Perfil</h2>
+                <button id="close-profile" class="close-modal-btn">&times;</button>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div
+                    style="width: 80px; height: 80px; background: var(--accent-color); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
+                    <i data-lucide="user" style="width: 40px; height: 40px; color: #fff;"></i>
+                </div>
+                <span id="profile-plan-badge"
+                    style="background: #333; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; color: #fff;">FREE</span>
+            </div>
+
+            <div class="modal-form-group">
+                <label class="modal-label">Nome</label>
+                <input type="text" id="profile-name" class="modal-input">
+            </div>
+
+            <div class="modal-form-group">
+                <label class="modal-label">Email</label>
+                <input type="email" id="profile-email" class="modal-input" disabled
+                    style="background: #1a1a1a; color: #666;">
+            </div>
+
+            <div class="modal-form-group">
+                <label class="modal-label">WhatsApp</label>
+                <input type="text" id="profile-whatsapp" class="modal-input" placeholder="(11) 99999-9999">
+            </div>
+
+            <button id="save-profile-btn" class="btn btn-primary full-width" style="padding: 14px;">SALVAR
+                ALTERAÇÕES</button>
+        </div>
+    </div>
+
+    <!-- MAINTENANCE OVERLAY -->
+    <div id="maintenance-overlay" class="modal-overlay hidden" style="flex-direction: column;">
+        <i data-lucide="construction"
+            style="width: 64px; height: 64px; color: var(--accent-color); margin-bottom: 20px;"></i>
+        <h2 style="color: #fff; margin-bottom: 10px;">SISTEMA EM MANUTENÇÃO</h2>
+        <p style="color: #888;">Estamos realizando melhorias. Volte em breve.</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script>
+        // Inline Simple Date Logic
+        const updateTime = () => {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('current-date').innerText = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Icon Init
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

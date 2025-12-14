@@ -1,0 +1,106 @@
+/* TOAST NOTIFICATION SYSTEM */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.toast-notification {
+    background: var(--bg-card);
+    border-left: 4px solid var(--accent-color);
+    padding: 15px 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    min-width: 300px;
+    max-width: 400px;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast-notification.active {
+    transform: translateX(0);
+}
+
+.toast-notification.success {
+    border-color: #2ecc71;
+}
+
+.toast-notification.error {
+    border-color: #e74c3c;
+}
+
+.toast-notification .toast-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.toast-notification.success .toast-icon {
+    color: #2ecc71;
+}
+
+.toast-notification.error .toast-icon {
+    color: #e74c3c;
+}
+
+.toast-notification .toast-content {
+    flex-grow: 1;
+}
+
+.toast-notification .toast-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    margin-bottom: 2px;
+    font-size: 0.95rem;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.toast-notification .toast-msg {
+    color: #aaa;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+}
+
+.toast-progress-bar {
+    height: 100%;
+    width: 100%;
+    background: currentColor;
+    /* Takes color from parent (border-color equivalent usually) or specific */
+}
+
+/* Specific bar colors */
+.toast-notification.success .toast-progress-bar {
+    background: #2ecc71;
+}
+
+.toast-notification.error .toast-progress-bar {
+    background: #e74c3c;
+}
+
+@keyframes progressShrink {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}

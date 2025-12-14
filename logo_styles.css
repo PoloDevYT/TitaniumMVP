@@ -1,0 +1,58 @@
+/* LOGO STYLES UPDATE */
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 80px;
+    /* Increased from 40px */
+    /* Adjust based on logo aspect ratio */
+    width: auto;
+    display: block;
+}
+
+.auth-logo {
+    display: inline-block;
+    margin-bottom: 40px;
+}
+
+.auth-logo img {
+    height: 150px;
+    /* Increased from 80px */
+    /* Larger for auth page */
+    width: auto;
+}
+
+.logo-footer {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.logo-footer img {
+    height: 90px;
+    /* Increased from 50px */
+    width: auto;
+}
+
+/* Override previous text logo styles to prevent conflict if classes remain */
+.logo {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: normal;
+}
+
+/* Responsive Logo Adjustments */
+@media (max-width: 768px) {
+    .logo img {
+        height: 50px;
+        /* Increased from 32px */
+    }
+
+    .auth-logo img {
+        height: 100px;
+        /* Increased from 60px */
+    }
+}
