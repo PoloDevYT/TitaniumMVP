@@ -1,14 +1,21 @@
 {
-  "name": "teste",
-  "version": "1.0.0",
-  "main": "script.js",
+  "name": "titanium-mvp",
+  "version": "1.1.0",
+  "description": "Landing page e backend leve para o ecossistema Titanium PRO.",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "db:setup": "node scripts/setupDb.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "fitness",
+    "api",
+    "sqlite",
+    "express"
+  ],
+  "author": "Titanium PRO",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",

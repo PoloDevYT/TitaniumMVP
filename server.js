@@ -1,5 +1,8 @@
 'use strict';
 
+const loadEnv = require('./env');
+loadEnv();
+
 /**
  * Titanium Backend (improved)
  *
