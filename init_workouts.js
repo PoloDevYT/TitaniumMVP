@@ -55,8 +55,6 @@ db.serialize(() => {
         duration TEXT,
         muscle_group TEXT
     )`);
-
-    // Check if empty to avoid duplicates on re-run
     db.get("SELECT count(*) as count FROM workouts", (err, row) => {
         if (row.count === 0) {
             const stmt = db.prepare("INSERT INTO workouts (title, description, difficulty, duration, muscle_group) VALUES (?, ?, ?, ?, ?)");

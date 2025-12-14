@@ -1,4 +1,4 @@
-/* Modal Overlay */
+
 .modal-overlay {
     position: fixed !important;
     top: 0 !important;
@@ -19,7 +19,6 @@
     display: none !important;
 }
 
-/* User Workout Card */
 .user-workout-card {
     background: linear-gradient(145deg, #1a1a1a, #111);
     border: 1px solid #333;
@@ -81,7 +80,6 @@
     color: #ff1f1f;
 }
 
-/* WORKOUTS */
 .workouts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

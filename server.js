@@ -14,10 +14,6 @@ const crypto = require('crypto');
 
 const app = express();
 
-// ==========================
-// Config
-// ==========================
-
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const PORT = Number(process.env.PORT || 3000);
 
@@ -25,31 +21,18 @@ const JWT_SECRET = process.env.JWT_SECRET || 'titanium_secret_key_elite_performa
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 
 const BCRYPT_SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS || 10);
-
-// Para evitar que o endpoint de upgrade de teste seja explorado em produção.
 const ALLOW_MOCK_UPGRADE = process.env.ALLOW_MOCK_UPGRADE === 'true' && NODE_ENV !== 'production';
-
-// CORS
 const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || '')
     .split(',')
     .map(s => s.trim())
     .filter(Boolean);
 
 if (!process.env.JWT_SECRET && NODE_ENV === 'production') {
-    // Em produção, é melhor falhar cedo.
     console.warn('[WARN] JWT_SECRET não definido. Defina JWT_SECRET para produção.');
 }
 
 app.disable('x-powered-by');
-
-// Se estiver atrás de proxy (Render/Heroku/Nginx), ajuda a pegar IP certo.
 app.set('trust proxy', 1);
-
-// ==========================
-// Middlewares básicos
-// ==========================
-
-// Request ID (útil para rastrear logs)
 app.use((req, res, next) => {
     const id = typeof crypto.randomUUID === 'function'
         ? crypto.randomUUID()
@@ -58,8 +41,6 @@ app.use((req, res, next) => {
     res.setHeader('X-Request-Id', id);
     next();
 });
-
-// Headers simples de segurança (sem depender de helmet)
 app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
@@ -67,19 +48,13 @@ app.use((req, res, next) => {
     res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 
     if (NODE_ENV === 'production') {
-        // Só faz sentido em HTTPS.
         res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
     }
     next();
 });
-
-// CORS com allowlist opcional
 app.use(cors({
     origin: (origin, cb) => {
-        // Sem origin (ex: curl, apps mobile) -> permite
         if (!origin) return cb(null, true);
-
-        // Se não definiu allowlist, libera tudo (mais prático em dev)
         if (ALLOWED_ORIGINS.length === 0) return cb(null, true);
 
         if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
@@ -89,38 +64,25 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Access-Token'],
     maxAge: 86400
 }));
-
-// JSON body
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: false }));
-
-// Erro de JSON inválido
 app.use((err, req, res, next) => {
     if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
         return res.status(400).json({ error: 'JSON inválido.' });
     }
     next(err);
 });
-
-// Log simples
 app.use((req, res, next) => {
     const start = Date.now();
     res.on('finish', () => {
         const ms = Date.now() - start;
-        // Evita logar corpo/senha.
         console.log(`[${req.requestId}] ${req.method} ${req.originalUrl} ${res.statusCode} ${ms}ms`);
     });
     next();
 });
 
-// ==========================
-// Rate limit simples (in-memory)
-// ==========================
-
 function createRateLimiter({ windowMs, max, keyPrefix }) {
     const buckets = new Map();
-
-    // Limpeza periódica
     const timer = setInterval(() => {
         const now = Date.now();
         for (const [k, v] of buckets.entries()) {
@@ -153,14 +115,8 @@ function createRateLimiter({ windowMs, max, keyPrefix }) {
 
 const authLimiter = createRateLimiter({ windowMs: 15 * 60 * 1000, max: 20, keyPrefix: 'auth' });
 
-// ==========================
-// Static + Slugs
-// ==========================
-
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const STATIC_DIR = fs.existsSync(PUBLIC_DIR) ? PUBLIC_DIR : __dirname;
-
-// Evita expor arquivos sensíveis caso você ainda esteja servindo o diretório raiz.
 const SENSITIVE_BASENAMES = new Set([
     'server.js',
     'server.improved.js',
@@ -199,16 +155,10 @@ function sendHtml(res, filename) {
         if (err) res.status(404).send('Not Found');
     });
 }
-
-// Rotas amigáveis
 app.get('/', (req, res) => sendHtml(res, 'index.html'));
 app.get('/dashboard', (req, res) => sendHtml(res, 'dashboard.html'));
 app.get('/admin', (req, res) => sendHtml(res, 'admin.html'));
 app.get('/login', (req, res) => sendHtml(res, 'login.html'));
-
-// ==========================
-// Helpers: DB promissificado
-// ==========================
 
 function dbGet(sql, params = []) {
     return new Promise((resolve, reject) => {
@@ -238,7 +188,7 @@ async function withTransaction(fn) {
         await dbRun('COMMIT');
         return result;
     } catch (err) {
-        try { await dbRun('ROLLBACK'); } catch (_) { /* ignore */ }
+        try { await dbRun('ROLLBACK'); } catch (_) {  }
         throw err;
     }
 }
@@ -246,10 +196,6 @@ async function withTransaction(fn) {
 const asyncHandler = (fn) => (req, res, next) => {
     Promise.resolve(fn(req, res, next)).catch(next);
 };
-
-// ==========================
-// Helpers: validação
-// ==========================
 
 function isNonEmptyString(v) {
     return typeof v === 'string' && v.trim().length > 0;
@@ -260,12 +206,10 @@ function normalizeEmail(email) {
 }
 
 function isValidEmail(email) {
-    // Simples e suficiente para validação básica
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function isValidPassword(pw) {
-    // bcrypt considera apenas 72 bytes, então limitamos.
     return typeof pw === 'string' && pw.length >= 8 && pw.length <= 72;
 }
 
@@ -367,17 +311,11 @@ async function logAction(userId, action, details, meta = null) {
     }
 }
 
-// ==========================
-// API
-// ==========================
-
 const api = express.Router();
 
 api.get('/health', (req, res) => {
     res.status(200).json({ ok: true, env: NODE_ENV, uptime: Math.round(process.uptime()) });
 });
-
-// --- AUTH ---
 
 api.post('/register', authLimiter, asyncHandler(async (req, res) => {
     const name = String(req.body?.name || '').trim();
@@ -454,8 +392,6 @@ api.post('/login', authLimiter, asyncHandler(async (req, res) => {
     });
 }));
 
-// --- ROTAS PROTEGIDAS ---
-
 const protectedApi = express.Router();
 
 protectedApi.use(verifyToken, attachUser, maintenanceGuard);
@@ -471,8 +407,6 @@ protectedApi.get('/dashboard', asyncHandler(async (req, res) => {
     const data = await dbGet(sql, [req.user.id]);
     res.status(200).json(data);
 }));
-
-// Endpoint de teste (DESABILITADO por padrão)
 protectedApi.post('/upgrade', asyncHandler(async (req, res) => {
     if (!ALLOW_MOCK_UPGRADE) {
         return res.status(404).json({ error: 'Rota não encontrada.' });
@@ -483,14 +417,10 @@ protectedApi.post('/upgrade', asyncHandler(async (req, res) => {
 
     res.status(200).json({ success: true, plan: 'black' });
 }));
-
-// WORKOUTS (Premium Only)
 protectedApi.get('/workouts', requirePlans(['black', 'iron']), asyncHandler(async (req, res) => {
     const rows = await dbAll('SELECT * FROM workouts');
     res.status(200).json(rows);
 }));
-
-// --- USER CUSTOM WORKOUTS ---
 
 protectedApi.get('/my-workouts', asyncHandler(async (req, res) => {
     const rows = await dbAll(
@@ -550,8 +480,6 @@ protectedApi.delete('/my-workouts/:id', asyncHandler(async (req, res) => {
     res.status(200).json({ success: true });
 }));
 
-// === PROGRESS TRACKING ===
-
 protectedApi.get('/progress', asyncHandler(async (req, res) => {
     const rows = await dbAll(
         'SELECT * FROM progress_entries WHERE user_id = ? ORDER BY created_at DESC',
@@ -564,8 +492,6 @@ protectedApi.post('/progress', asyncHandler(async (req, res) => {
     const weight_kg = req.body?.weight_kg;
     const body_fat = req.body?.body_fat;
     const notes = isNonEmptyString(req.body?.notes) ? String(req.body.notes).trim() : null;
-
-    // Campos opcionais, mas se vierem precisam ser válidos
     const w = (weight_kg === undefined || weight_kg === null) ? null : Number(weight_kg);
     const bf = (body_fat === undefined || body_fat === null) ? null : Number(body_fat);
 
@@ -585,8 +511,6 @@ protectedApi.post('/progress', asyncHandler(async (req, res) => {
 
     res.status(201).json({ id: insert.lastID });
 }));
-
-// === COMMUNITY ===
 
 protectedApi.get('/community', asyncHandler(async (req, res) => {
     const sql = `
@@ -616,10 +540,7 @@ protectedApi.post('/community', asyncHandler(async (req, res) => {
     res.status(201).json({ id: insert.lastID });
 }));
 
-// === PROFILE ===
-
 protectedApi.get('/profile', asyncHandler(async (req, res) => {
-    // Usa dados já carregados em attachUser
     const { id, name, email, whatsapp, plan, created_at } = req.user;
     res.status(200).json({ id, name, email, whatsapp, plan, created_at });
 }));
@@ -635,8 +556,6 @@ protectedApi.put('/profile', asyncHandler(async (req, res) => {
 
     res.status(200).json({ success: true });
 }));
-
-// --- ADMIN ---
 
 const adminApi = express.Router();
 adminApi.use(requireAdmin);
@@ -704,13 +623,9 @@ adminApi.delete('/user/:id', asyncHandler(async (req, res) => {
     if (!Number.isInteger(targetId) || targetId <= 0) {
         return res.status(400).json({ error: 'ID inválido.' });
     }
-
-    // Prevent self-delete
     if (targetId === req.user.id) {
         return res.status(400).json({ error: 'Não é possível excluir a si mesmo.' });
     }
-
-    // Remove dados relacionados para evitar lixo orfão
     const changes = await withTransaction(async () => {
         await dbRun('DELETE FROM user_stats WHERE user_id = ?', [targetId]);
         await dbRun('DELETE FROM progress_entries WHERE user_id = ?', [targetId]);
@@ -748,32 +663,16 @@ adminApi.post('/settings', asyncHandler(async (req, res) => {
 
     res.status(200).json({ success: true });
 }));
-
-// monta /api/admin/*
 protectedApi.use('/admin', adminApi);
-
-// monta todas rotas protegidas em /api
 api.use(protectedApi);
-
-// monta router principal
 app.use('/api', api);
-
-// ==========================
-// 404 API
-// ==========================
 
 app.use('/api', (req, res) => {
     res.status(404).json({ error: 'Rota não encontrada.' });
 });
 
-// ==========================
-// Error handler
-// ==========================
-
 app.use((err, req, res, next) => {
     console.error(`[${req.requestId}]`, err);
-
-    // Erros de CORS (origin não permitida)
     if (String(err?.message || '').startsWith('CORS:')) {
         return res.status(403).json({ error: 'CORS bloqueou a requisição.' });
     }
@@ -781,18 +680,12 @@ app.use((err, req, res, next) => {
     if (res.headersSent) return next(err);
 
     const status = err?.statusCode && Number.isInteger(err.statusCode) ? err.statusCode : 500;
-
-    // Não vaze detalhes em produção
     const message = (NODE_ENV === 'production' && status >= 500)
         ? 'Erro interno.'
         : (err?.message || 'Erro interno.');
 
     res.status(status).json({ error: message });
 });
-
-// ==========================
-// Start server + shutdown
-// ==========================
 
 const server = app.listen(PORT, () => {
     console.log(`Titanium Server running on Port ${PORT} (env=${NODE_ENV})`);
@@ -819,7 +712,6 @@ server.on('error', (error) => {
 function shutdown(signal) {
     console.log(`Received ${signal}. Shutting down...`);
     server.close(() => {
-        // Fecha DB se existir
         if (typeof db.close === 'function') {
             try {
                 db.close(() => console.log('DB connection closed.'));

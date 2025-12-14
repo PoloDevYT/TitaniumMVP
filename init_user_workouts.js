@@ -2,7 +2,6 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./titanium.db');
 
 db.serialize(() => {
-    // User custom workouts
     db.run(`CREATE TABLE IF NOT EXISTS user_workouts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,

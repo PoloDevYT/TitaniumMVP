@@ -1,14 +1,13 @@
-/* --- ELITE DASHBOARD SYSTEM --- */
+
 
 .dashboard-layout {
     display: grid;
     grid-template-columns: 280px 1fr;
     min-height: 100vh;
     background-color: #000;
-    /* Deepest black */
+    
 }
 
-/* SIDEBAR */
 .sidebar {
     background-color: var(--bg-secondary);
     border-right: 1px solid var(--border-color);
@@ -64,7 +63,7 @@
 .nav-item:hover,
 .nav-item.active {
     background-color: rgba(255, 31, 31, 0.08);
-    /* Transparent Red */
+    
     color: #fff;
     border-left: 3px solid var(--accent-color);
 }
@@ -111,7 +110,6 @@
     color: var(--text-secondary);
 }
 
-/* MAIN CONTENT */
 .dashboard-main {
     padding: 40px;
     background-color: #050505;
@@ -135,7 +133,6 @@
     font-size: 1.5rem;
 }
 
-/* STATUS CARDS */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -205,7 +202,6 @@
     pointer-events: none;
 }
 
-/* PLAN WIDGETS */
 .dashboard-sections {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -270,7 +266,6 @@
     margin: 0;
 }
 
-/* BLACK UPGRADE CARD */
 .black-card-widget {
     background: linear-gradient(145deg, #111 0%, #000 100%);
     border: 1px solid #333;
@@ -329,7 +324,6 @@
     box-shadow: 0 0 15px var(--accent-glow);
 }
 
-/* Loading State */
 #loading-state {
     position: fixed;
     top: 0;
@@ -360,7 +354,6 @@
     }
 }
 
-/* MODAL STYLES */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -375,12 +368,10 @@
     justify-content: center;
 }
 
-/* UTILS */
 .hidden {
     display: none !important;
 }
 
-/* MODAL CONTENT & ANIMATIONS */
 .modal-content {
     background: #111;
     border: 1px solid #333;
@@ -430,7 +421,6 @@
     color: #fff;
 }
 
-/* Forms inside Modal */
 .modal-form-group {
     margin-bottom: 20px;
 }
@@ -458,7 +448,6 @@
     outline: none;
 }
 
-/* Exercise Builder Grid */
 .exercise-builder-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr auto;
@@ -501,7 +490,6 @@
     padding-top: 10px;
 }
 
-/* Mobile Adjustments for Modal */
 @media (max-width: 600px) {
     .modal-content {
         padding: 20px;
@@ -514,7 +502,7 @@
 
     .exercise-builder-grid input:first-child {
         grid-column: 1 / -1;
-        /* Name full width */
+        
     }
 
     .exercise-add-btn {
@@ -524,6 +512,6 @@
 
     .exercise-builder-header {
         display: none;
-        /* Hide labels on mobile to save space */
+        
     }
 }

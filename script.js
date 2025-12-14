@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Navigation Scroll Effect
     const navbar = document.getElementById('navbar');
 
     window.addEventListener('scroll', () => {
@@ -9,26 +8,22 @@ document.addEventListener('DOMContentLoaded', () => {
             navbar.classList.remove('scrolled');
         }
     });
-
-    // 2. Scroll Reveal Animation using Intersection Observer
     const revealElements = document.querySelectorAll('.reveal');
 
     const revealObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
-                observer.unobserve(entry.target); // Reveal only once
+                observer.unobserve(entry.target);
             }
         });
     }, {
         root: null,
-        threshold: 0.15, // Trigger when 15% of element is visible
+        threshold: 0.15,
         rootMargin: "0px"
     });
 
     revealElements.forEach(el => revealObserver.observe(el));
-
-    // 3. Parallax Effect for "Experience" Section
     const parallaxBg = document.querySelector('.parallax-bg');
     const parallaxSection = document.querySelector('.parallax-section');
 
@@ -37,34 +32,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rect = parallaxSection.getBoundingClientRect();
         const scrollSpeed = 0.5;
-
-        // Only animate if in view
         if (rect.top < window.innerHeight && rect.bottom > 0) {
             const yPos = (window.scrollY - parallaxSection.offsetTop) * scrollSpeed;
-            // Simple parallax using transform
-            // Adjust calculation based on where the background needs to move
-            // Limit the movement to avoid whitespace
             const limit = 100;
-            // We can just use a simple offset if background-attachment fixed isn't used
-            // Since we used absolute positioning:
             parallaxBg.style.transform = `translateY(${yPos * 0.2}px)`;
         }
     });
-
-    // 4. FAQ Accordion Logic
     const accordions = document.querySelectorAll('.accordion-header');
 
     accordions.forEach(acc => {
         acc.addEventListener('click', () => {
             const content = acc.nextElementSibling;
-
-            // Toggle current
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
                 acc.querySelector('i').style.transform = 'rotate(0deg)';
                 acc.style.color = '#fff';
             } else {
-                // Close others (optional, but cleaner)
                 document.querySelectorAll('.accordion-content').forEach(c => c.style.maxHeight = null);
                 document.querySelectorAll('.accordion-header i').forEach(i => i.style.transform = 'rotate(0deg)');
                 document.querySelectorAll('.accordion-header').forEach(h => h.style.color = '#fff');
@@ -75,8 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // 5. Smooth Scroll for Anchor Links (Backup for Safari/Legacy)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -85,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                // Offset for fixed header
                 const headerOffset = 80;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -97,8 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // 6. Auth Page Logic (Login/Register Toggle)
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const showRegisterBtn = document.getElementById('show-register');
@@ -116,12 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
             registerForm.classList.add('hidden');
             loginForm.classList.remove('hidden');
         });
-
-        // --- API INTEGRATION ---
-
-        // --- API INTEGRATION ---
-
-        // --- TOAST NOTIFICATION SYSTEM ---
         const showToast = (message, type = 'success') => {
             const container = document.getElementById('toast-container') || createToastContainer();
             const toast = document.createElement('div');
@@ -143,16 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             container.appendChild(toast);
             lucide.createIcons();
-
-            // Trigger animation
             requestAnimationFrame(() => {
                 toast.classList.add('active');
             });
-
-            // Remove after 3s
             setTimeout(() => {
                 toast.classList.remove('active');
-                setTimeout(() => toast.remove(), 400); // Wait for transition
+                setTimeout(() => toast.remove(), 400);
             }, 3000);
         };
 
@@ -162,13 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(el);
             return el;
         };
-
-        // Helper to show notifications (Toast)
         const notify = (msg, isError = false) => {
             showToast(msg, isError ? 'error' : 'success');
         };
-
-        // Handle Register
         const registerFormEl = registerForm.querySelector('form');
         registerFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -196,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (res.ok) {
                     notify(`Bem-vindo à Elite, ${data.user.name}.`);
                     localStorage.setItem('titanium_token', data.token);
-                    setTimeout(() => window.location.href = '/', 1000); // Delay for toast
+                    setTimeout(() => window.location.href = '/', 1000);
                 } else {
                     notify(data.error || 'Falha no registro', true);
                 }
@@ -207,8 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = false;
             }
         });
-
-        // Handle Login
         const loginFormEl = loginForm.querySelector('form');
         loginFormEl.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -236,8 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('titanium_token', data.token);
                     localStorage.setItem('titanium_user_name', data.user.name);
                     localStorage.setItem('titanium_user_role', data.user.role);
-
-                    // window.location.href = '/'; // Stay on main page
                     setTimeout(() => window.location.href = '/', 1000);
                 } else {
                     notify(data.error || 'Credenciais inválidas', true);
@@ -250,17 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // 7. Global Auth Header Logic (Runs on every page)
     const token = localStorage.getItem('titanium_token');
     const userName = localStorage.getItem('titanium_user_name');
-
-    // For Index/General Pages: Swap CTA for User Menu
-    const navCta = document.querySelector('.nav-cta'); // "Members Area" button
-
-    // If logged in and on index page, replace button with profile
-    // Logic updated to handle both Index Nav and Dashboard Sidebar menu if needed, 
-    // but primarily for the header nav as requested.
+    const navCta = document.querySelector('.nav-cta');
     if (token && navCta) {
         const userFirstName = userName ? userName.split(' ')[0] : 'Membro';
         const userRole = localStorage.getItem('titanium_user_role');
@@ -286,35 +238,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
-
-        // Wrap navCta to replace smoothly or just modify parent
-        const parent = navCta.parentNode; // Usually .nav-container
+        const parent = navCta.parentNode;
         const wrapper = document.createElement('div');
         wrapper.innerHTML = profileHtml;
-
-        // Replace the button with our new dropdown
         navCta.replaceWith(wrapper.firstElementChild);
-
-        // Re-init lucide icons for the new elements
         if (window.lucide) lucide.createIcons();
     }
-
-    // Handle Dropdown Toggles (Delegation)
     document.addEventListener('click', (e) => {
         const trigger = e.target.closest('.user-profile-trigger');
-        const menu = document.querySelector('.dropdown-menu'); // works for both dash and nav if structured same
+        const menu = document.querySelector('.dropdown-menu');
 
         if (trigger) {
-            // Find sibling menu specific to this trigger context
             const siblingMenu = trigger.nextElementSibling;
             if (siblingMenu) siblingMenu.classList.toggle('active');
         } else {
-            // Close if clicking outside
             document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
         }
     });
-
-    // Handle Logout
     const handleLogout = (e) => {
         if (e.target.closest('#logout-btn-nav') || e.target.closest('#logout-btn-dash')) {
             e.preventDefault();
@@ -324,8 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     document.addEventListener('click', handleLogout);
-
-    // Dashboard Logic: Fetch Data & Handle Plan State
     if (window.location.pathname.includes('/dashboard')) {
         if (!token) {
             window.location.href = '/login';
@@ -353,18 +291,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!data || !data.name) {
                     throw new Error('Dados do usuário incompletos ou inválidos.');
                 }
-
-                // Hide Loading
                 document.getElementById('loading-state').classList.add('hidden');
-
-                // Update User Info
                 document.getElementById('user-name').innerText = data.name.split(' ')[0].toUpperCase();
 
                 const statusPill = document.getElementById('status-indicator');
                 const badge = document.getElementById('user-plan-badge');
 
                 if (data.plan === 'black' || data.plan === 'iron') {
-                    // PREMIUM VIEW
                     document.getElementById('premium-dashboard').classList.remove('hidden');
                     document.getElementById('free-dashboard').classList.add('hidden');
 
@@ -374,14 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     badge.innerText = "BLACK MEMBER";
                     badge.style.background = "var(--accent-color)";
                     badge.style.color = "#000";
-
-                    // Fill Stats (Real Data from DB)
                     document.getElementById('stat-streak').innerText = data.streak_days || 0;
                     document.getElementById('stat-load').innerText = data.total_load_kg || 0;
                     document.getElementById('stat-checkins').innerText = data.monthly_checkins || 0;
 
                 } else {
-                    // FREE VIEW
                     document.getElementById('free-dashboard').classList.remove('hidden');
                     document.getElementById('premium-dashboard').classList.add('hidden');
 
@@ -395,29 +325,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } catch (err) {
                 console.error("Dashboard Error:", err);
-                // notify("Erro ao carregar dashboard. Faça login novamente.", true); // Avoid infinite loop if not logged
                 localStorage.removeItem('titanium_token');
                 window.location.href = '/login';
             }
         };
 
         loadDashboard();
-
-        // Handle Logout
         document.getElementById('logout-btn').addEventListener('click', () => {
             localStorage.removeItem('titanium_token');
             window.location.href = '/';
         });
-
-        // NAV LOGIC (Dashboard Routing)
         const contentSections = {
             'dashboard': document.querySelector('.dashboard-sections'),
             'workouts': document.getElementById('workouts-view')
         };
-
-        // Stats Row (Toggle visibility based on view)
         const statsRow = document.querySelector('.stats-grid');
-        const dbHeader = document.querySelector('.db-header'); // Main Header
+        const dbHeader = document.querySelector('.db-header');
 
         document.querySelectorAll('.nav-item').forEach(nav => {
             nav.addEventListener('click', (e) => {
@@ -425,20 +348,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetText === 'Encerrar Sessão') return;
 
                 e.preventDefault();
-
-                // Update Active State
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 nav.classList.add('active');
-
-                // Hide all views first
                 const allViews = ['dashboard', 'workouts', 'evolution-view', 'community-view'];
                 allViews.forEach(v => {
                     const el = document.getElementById(v === 'dashboard' ? 'dashboard-sections' : v === 'workouts' ? 'workouts-view' : v);
                     if (el) el.classList.add('hidden');
                 });
                 statsRow.classList.add('hidden');
-
-                // Routing
                 if (targetText === 'Meus Treinos') {
                     document.getElementById('workouts-view').classList.remove('hidden');
                     loadMyWorkouts();
@@ -454,11 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-
-        // === WORKOUT BUILDER LOGIC ===
         let tempExercises = [];
-
-        // Load My Workouts
         const loadMyWorkouts = async () => {
             const list = document.getElementById('my-workouts-list');
             const emptyMsg = document.getElementById('no-workouts-msg');
@@ -505,8 +418,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(err);
             }
         };
-
-        // Delete Workout
         window.deleteMyWorkout = async (id) => {
             if (!confirm('Excluir este treino?')) return;
             await fetch(`/api/my-workouts/${id}`, {
@@ -515,8 +426,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             loadMyWorkouts();
         };
-
-        // Open Builder Modal
         const openBuilderBtn = document.getElementById('open-builder-btn');
         const builderModal = document.getElementById('workout-builder-modal');
         const closeBuilderBtn = document.getElementById('close-builder');
@@ -536,8 +445,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 builderModal.classList.add('hidden');
             });
         }
-
-        // Add Exercise
         const addExerciseBtn = document.getElementById('add-exercise-btn');
         const exerciseInput = document.getElementById('exercise-input');
         const exercisesList = document.getElementById('exercises-list');
@@ -553,8 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const exercise = { name, sets: parseInt(sets), reps: parseInt(reps), weight: parseFloat(weight) };
                 tempExercises.push(exercise);
-
-                // Clear inputs
                 exerciseInput.value = '';
                 document.getElementById('exercise-sets').value = '';
                 document.getElementById('exercise-reps').value = '';
@@ -574,8 +479,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.key === 'Enter') addExerciseBtn.click();
             });
         }
-
-        // Save Workout
         const saveWorkoutBtn = document.getElementById('save-workout-btn');
         if (saveWorkoutBtn) {
             saveWorkoutBtn.addEventListener('click', async () => {
@@ -600,8 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         };
-
-        // Upgrade Button Logic (Secondary)
         const upgradeBtn2 = document.getElementById('upgrade-btn-2');
         if (upgradeBtn2) {
             upgradeBtn2.addEventListener('click', async () => {
@@ -615,7 +516,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-        // === EVOLUTION / PROGRESS ===
         let progressChart = null;
 
         const loadEvolution = async () => {
@@ -674,8 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadEvolution();
             });
         }
-
-        // === COMMUNITY ===
         const loadCommunity = async () => {
             const feed = document.getElementById('community-feed');
             try {
@@ -723,8 +621,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadCommunity();
             });
         }
-
-        // === PROFILE ===
         const userMiniAvatar = document.querySelector('.mini-avatar');
         const profileModal = document.getElementById('profile-modal');
         const closeProfileBtn = document.getElementById('close-profile');
@@ -772,9 +668,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-
     }
-    // 8. Mobile Menu Logic
     const mobileToggle = document.querySelector('.mobile-toggle');
     const navLinks = document.querySelector('.nav-links');
 
@@ -782,8 +676,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
         });
-
-        // Close menu when clicking a link
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');

@@ -2,7 +2,6 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./titanium.db');
 
 db.serialize(() => {
-    // 1. Progress Entries
     db.run(`CREATE TABLE IF NOT EXISTS progress_entries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
@@ -15,8 +14,6 @@ db.serialize(() => {
         if (err) console.error(err);
         else console.log("progress_entries ready.");
     });
-
-    // 2. Community Posts
     db.run(`CREATE TABLE IF NOT EXISTS community_posts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,

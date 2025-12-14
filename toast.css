@@ -1,4 +1,4 @@
-/* TOAST NOTIFICATION SYSTEM */
+
 #toast-container {
     position: fixed;
     top: 20px;
@@ -83,10 +83,9 @@
     height: 100%;
     width: 100%;
     background: currentColor;
-    /* Takes color from parent (border-color equivalent usually) or specific */
+    
 }
 
-/* Specific bar colors */
 .toast-notification.success .toast-progress-bar {
     background: #2ecc71;
 }

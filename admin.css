@@ -1,6 +1,4 @@
-/* ====================================================
-   TITANIUM ADMIN PANEL - PREMIUM DARK THEME
-   ==================================================== */
+
 
 :root {
     --admin-bg: #0a0a0a;
@@ -15,7 +13,6 @@
     --admin-danger: #e74c3c;
 }
 
-/* LAYOUT */
 .admin-layout {
     display: flex;
     min-height: 100vh;
@@ -23,7 +20,6 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* SIDEBAR */
 .admin-sidebar {
     width: 260px;
     min-width: 260px;
@@ -82,7 +78,6 @@
     height: 20px;
 }
 
-/* MAIN CONTENT */
 .admin-content {
     flex-grow: 1;
     margin-left: 260px;
@@ -91,7 +86,6 @@
     min-height: 100vh;
 }
 
-/* HEADER */
 .admin-header {
     display: flex;
     justify-content: space-between;
@@ -114,7 +108,6 @@
     margin-top: 5px;
 }
 
-/* STAT BOXES */
 .stat-box {
     background: var(--admin-card-bg);
     padding: 25px;
@@ -150,7 +143,6 @@
     height: 28px;
 }
 
-/* TABLES */
 .admin-table {
     width: 100%;
     border-collapse: collapse;
@@ -183,7 +175,6 @@
     background: rgba(255, 255, 255, 0.03);
 }
 
-/* BUTTONS */
 .action-btn {
     padding: 8px 14px;
     border-radius: 6px;
@@ -223,7 +214,6 @@
     background: #c0392b;
 }
 
-/* BADGES */
 .status-badge {
     display: inline-block;
     padding: 4px 10px;
@@ -253,7 +243,6 @@
     margin-left: 8px;
 }
 
-/* CARDS/CONTAINERS */
 .admin-card {
     background: var(--admin-card-bg);
     border: 1px solid var(--admin-border);
@@ -269,7 +258,6 @@
     font-weight: 600;
 }
 
-/* FORMS */
 .admin-form-group {
     margin-bottom: 20px;
 }
@@ -305,12 +293,10 @@
     color: #555;
 }
 
-/* HIDDEN STATE */
 .hidden {
     display: none !important;
 }
 
-/* SCROLLBAR */
 .admin-content::-webkit-scrollbar,
 #logs-container::-webkit-scrollbar {
     width: 8px;
@@ -332,7 +318,6 @@
     background: #444;
 }
 
-/* RESPONSIVE */
 @media (max-width: 1024px) {
     .admin-sidebar {
         width: 80px;
